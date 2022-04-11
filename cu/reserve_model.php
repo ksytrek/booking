@@ -1,7 +1,48 @@
+
 <script>
     function cancel_re(id) {
-        if(confirm('ต้องการยกเลิกจากจองใช้หรือไม่')){
-            
+
+
+
+        var dateTimeStart = new Date();
+        var gHS = dateTimeStart.getHours();
+        var gMS = dateTimeStart.getMinutes();
+
+        var timeEnd_add = new Date(dateTimeStart);
+        timeEnd_add.setMinutes(dateTimeStart.getMinutes() + 100);
+
+        var sde = "" + gMS;
+        var sNewse = sde.length == 1 ? "0" + sde : sde;
+
+        var sd = "" + timeEnd_add.getMinutes();
+        var sNews = sd.length == 1 ? "0" + sd : sd;
+
+        var timeNo = gHS + ":" + sNewse;
+        var timeEn = timeEnd_add.getHours() + ":" + sNews;
+        if (confirm('ต้องการยกเลิกจากจองใช้หรือไม่')) {
+            // alert(timeNo)
+            // alert(timeEn)
+            $.ajax({
+                url : "../controllers/reserve_cl.php",
+                type : "POST",
+                data : {
+                    key: "cencel_reserve",
+                    id : id,
+                    timeNow : timeNo,
+                    timeEn : timeEn
+                },
+                success : function(result, statusText, jqXHR){
+                    console.log(result);
+                    if(result == 'success'){
+                        alert("ยกเลิกการจองสำเร็จ");
+                    }else{
+                        alert("ไม่สามารถยกเลิกได้ เนื่องเกินเวลาที่กำหนดไว้");
+                    }
+                },
+                error : function(jqXHR, statusText,error){
+                    alert('ยกเลิกการจองโต๊ะไม่สำเร็จ')
+                }
+            });
         }
     }
 
@@ -48,7 +89,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label">เลือกเวลาที่เข้าร้าน</label>
-                        <input id="timeStart" type="time" name="timeStart_re" value="16:00" class="form-control" required>
+                        <input id="timeStart"  type="time" name="timeStart_re" value="16:00" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label">เวลาที่ร้านกำหนด (ประมาณ) </label>
@@ -63,6 +104,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script>
     $("#form-reserve").submit(function() {

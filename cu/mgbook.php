@@ -70,6 +70,7 @@ include_once('./header.php');
 
 
 
+
 </head>
 
 <body>
@@ -160,8 +161,9 @@ include_once('./header.php');
                             // alert("dlskjf")
                             $("#mgBook_show").css("display", "block");
                             // $("#info_show").css("display", "none");
-                            
+
                         });
+
                         $(document).ready(function() {
                             update_mgBook_table();
                             update_hiShow_table();
@@ -224,8 +226,8 @@ include_once('./header.php');
                                                             FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND (rt.status_re != 2 AND rt.status_re != 3);";
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) :
-                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month].' พ.ศ.'.$row->year+543;
-                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month] . ' ' . (543 + intval($row->year));;
+                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month-1] . ' ' . (543 + intval($row->year));;
                                                 $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
                                                 $timeEnd_re = $date . "</br> " . $row->timeEnd_n . ' น.';
                                             ?>
@@ -257,8 +259,6 @@ include_once('./header.php');
                                         </tbody>
                                     </table>
                                     <script>
-                                        
-
                                         function update_mgBook_table() {
                                             $('#mgBook_table').DataTable({
                                                 dom: 'lBfrtip',
@@ -337,11 +337,11 @@ include_once('./header.php');
                                                         FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND rt.status_re = 2 ;";
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) : //create_time
-                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month].' พ.ศ.'.$row->year+543;
-                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month] . ' ' . (543 + intval($row->year));
+                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month-1] . ' ' . (543 + intval($row->year));
                                                 $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
 
-                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d] . ' ' . (543 + intval($row->year_c));
+                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d-1] . ' ' . (543 + intval($row->year_c));
                                                 $timeC_re = $date_C . "</br> " . $row->time_c . ' น.';
                                             ?>
                                                 <tr>
@@ -489,11 +489,11 @@ include_once('./header.php');
                                                         FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND rt.status_re = 3 ;";
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) : //create_time
-                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month].' พ.ศ.'.$row->year+543;
-                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month] . ' ' . (543 + intval($row->year));
+                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month-1] . ' ' . (543 + intval($row->year));
                                                 $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
 
-                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d] . ' ' . (543 + intval($row->year_c));
+                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d-1] . ' ' . (543 + intval($row->year_c));
                                                 $timeC_re = $date_C . "</br> " . $row->time_c . ' น.';
                                             ?>
                                                 <tr>
