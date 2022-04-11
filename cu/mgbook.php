@@ -197,15 +197,15 @@ include_once('./header.php');
                                             </tr>
                                         </thead>
                                         <tbody>
-
+ 
                                             <?php
                                             $thaiweek = array("วันอาทิตย์", "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัส", "วันศุกร์", "วันเสาร์");
-                                            $thaimonth = array("มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม");
+                                            $thaimonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
                                             $sql_search = "SELECT *,DATE_FORMAT(rt.date_re, '%d') as Dd ,DATE_FORMAT(rt.date_re, '%c') as month ,DATE_FORMAT(rt.date_re, '%Y') as year FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND (rt.status_re != 2 AND rt.status_re != 3);";
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) :
-                                                $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month].' พ.ศ.'.$row->year+543;
+                                                $date = 'วันที่ '.$row->Dd .' '.$thaimonth[2].' พ.ศ.'.$row->year+543;
                                                 $timeStart_re = $date . "</br>เวลา " . $row->timeStart_re.' น.';
                                                 $timeEnd_re = $date . "</br>เวลา " . $row->timeEnd_re.' น.';
                                             ?>
