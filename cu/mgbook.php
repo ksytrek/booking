@@ -171,7 +171,8 @@ include_once('./header.php');
                                 $("#mgBook_show").css("display", "block");
                                 $("#hi_show").css("display", "none");
                             }
-                        }
+                        } 
+                        
                     </script>
 
                     <div id="mgBook_show" style="display: block;" class="col-lg-10 mb-5 mb-lg-0 order-0 order-lg-1">
