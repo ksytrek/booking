@@ -1,4 +1,10 @@
 <script>
+    function cancel_re(id) {
+        if(confirm('ต้องการยกเลิกจากจองใช้หรือไม่')){
+            
+        }
+    }
+
     function convert(str) {
         var date = new Date(str),
             mnth = ("0" + (date.getMonth() + 1)).slice(-2),
@@ -86,11 +92,11 @@
             },
             success: function(result, statusText, jqXHR) {
                 console.log(result);
-                if(result == 'success'){
+                if (result == 'success') {
                     alert('จองโต๊ะสำเร็จ');
                     // $('#form-reserve').trigger("reset");
                     location.reload(true);
-                }else{
+                } else {
                     alert("มีลูกค้าจองโต๊ะล่วงหน้าแล้ว");
                 }
             },
@@ -121,7 +127,7 @@
         // alert(gH);
         var s = "" + gMS;
         var sNew = s.length == 1 ? "0" + s : s;
-        
+
         var sd = "" + timeEnd_add.getMinutes();
         var sNews = sd.length == 1 ? "0" + sd : sd;
         if (gHS >= 16 && gHS <= 21) {

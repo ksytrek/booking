@@ -141,7 +141,7 @@ include_once('./header.php');
         <section id="main-container" class="main-container">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-2 order-1 order-lg-0">
+                    <div class="col-lg-3 order-1 order-lg-0">
                         <div class="sidebar sidebar-left">
                             <div class="widget">
                                 <h3 class="widget-title">จัดการการจอง</h3>
@@ -149,7 +149,8 @@ include_once('./header.php');
                                     <!-- <li><a href="#">แก้ไขข้อมูล</a></li> -->
                                     <li><a href="javascript:show_div('mgBook_show')">จัดการการจอง</a></li>
                                     <li><a href="javascript:show_div('hi_show')">ประวัติการจอง</a></li>
-
+                                    <li><a href="javascript:show_div('hiC_show')">ประวัติการจองที่ยกเลิก</a></li>
+                                    <!-- hiC_show -->
                                 </ul>
                             </div>
                         </div>
@@ -159,29 +160,39 @@ include_once('./header.php');
                             // alert("dlskjf")
                             $("#mgBook_show").css("display", "block");
                             // $("#info_show").css("display", "none");
+                            
+                        });
+                        $(document).ready(function() {
+                            update_mgBook_table();
+                            update_hiShow_table();
+                            update_hiCancelShow_table();
                         });
 
                         function show_div(id) {
                             if (id == 'hi_show') {
                                 $("#mgBook_show").css("display", "none");
+                                $("#hiC_show").css("display", "none");
                                 $("#hi_show").css("display", "block");
-                                update_hiShow_table();
+                                // update_hiShow_table();
 
                             } else if (id == 'mgBook_show') {
                                 $("#mgBook_show").css("display", "block");
                                 $("#hi_show").css("display", "none");
+                                $("#hiC_show").css("display", "none");
+                            } else if (id == 'hiC_show') {
+                                $("#mgBook_show").css("display", "none");
+                                $("#hi_show").css("display", "none");
+                                $("#hiC_show").css("display", "block");
                             }
-                        } 
-
-                        
+                        }
                     </script>
 
-                    <div id="mgBook_show" style="display: block;" class="col-lg-10 mb-5 mb-lg-0 order-0 order-lg-1">
+                    <div id="mgBook_show" style="display: block;" class="col-lg-9 mb-5 mb-lg-0 order-0 order-lg-1">
                         <div class="post">
                             <div class="post-body">
                                 <div class="entry-header">
                                     <h2 class="entry-title">
-                                        <a href="javascript:void(0)">จัดการการจอง</a>
+                                        <a href="javascript:void(0)">จัดการการจอง <span style="color: red">(หากต้องการยกเลิกกรุณายกเลิกก่อน 2 ชั่วโมง)</span></a>
                                     </h2>
                                 </div><!-- header end -->
 
@@ -199,45 +210,54 @@ include_once('./header.php');
                                             </tr>
                                         </thead>
                                         <tbody>
- 
+
                                             <?php
                                             $thaiweek = array("วันอาทิตย์", "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัส", "วันศุกร์", "วันเสาร์");
                                             $thaimonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
-                                            $sql_search = "SELECT *,DATE_FORMAT(rt.date_re, '%d') as Dd ,DATE_FORMAT(rt.date_re, '%c') as month ,DATE_FORMAT(rt.date_re, '%Y') as year FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND (rt.status_re != 2 AND rt.status_re != 3);";
+                                            $sql_search = "SELECT *,
+                                                                    DATE_FORMAT(rt.date_re, '%d') as Dd ,
+                                                                    DATE_FORMAT(rt.date_re, '%c') as month ,
+                                                                    DATE_FORMAT(rt.date_re, '%Y') as year, 
+                                                                    DATE_FORMAT(rt.timeStart_re, '%H : %i ') as timeStart_n ,
+                                                                    DATE_FORMAT(rt.timeEnd_re, '%H : %i ') as timeEnd_n 
+                                                            FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND (rt.status_re != 2 AND rt.status_re != 3);";
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) :
-                                                $date = 'วันที่ '.$row->Dd .' '.$thaimonth[2].' พ.ศ.'.$row->year+543;
-                                                $timeStart_re = $date . "</br>เวลา " . $row->timeStart_re.' น.';
-                                                $timeEnd_re = $date . "</br>เวลา " . $row->timeEnd_re.' น.';
+                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month].' พ.ศ.'.$row->year+543;
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month] . ' ' . (543 + intval($row->year));;
+                                                $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
+                                                $timeEnd_re = $date . "</br> " . $row->timeEnd_n . ' น.';
                                             ?>
                                                 <tr>
                                                     <td class="text-center"><?php echo ++$i_r; ?></td>
                                                     <td class=""><?php echo 'โต๊ะ' . $row->zone_tb . '' . $row->no_tb ?></td>
                                                     <td><?php echo $timeStart_re; ?> </td>
                                                     <td><?php echo $timeEnd_re; ?> </td>
-                                                    <td><span class="badge badge-primary">รอยืนยัน</span></td>
-                                                    <td><a href="javascript:void(0)" class="badge badge-danger">ยกเลิก</a></td>
+                                                    <td>
+                                                        <?php
+                                                        echo $row->status_re == 0 ? "<span class='badge badge-primary'>รอยืนยัน</span>" : "<span class='badge badge-warning'>ยืนยันแล้ว</span>";
+                                                        ?>
+
+                                                    </td>
+                                                    <td><a href="javascript:cancel_re(<?php echo $row->id_re; ?>)" class="badge badge-danger">ยกเลิก</a></td>
                                                 </tr>
                                             <?php endforeach; ?>
 
 
-                                            <tr>
+                                            <!-- <tr>
                                                 <td class="text-center">2</td>
                                                 <td class="">B15</td>
                                                 <td>Thursday June 15 2022 16:58 </td>
                                                 <td>Thursday June 10 2022 16:58</td>
                                                 <td><span class="badge badge-warning">ยืนยันแล้ว</span></td>
                                                 <td><a href="javascript:void(0)" class="badge badge-danger">ยกเลิก</a></td>
-                                            </tr>
+                                            </tr> -->
 
                                         </tbody>
                                     </table>
                                     <script>
-                                        $(document).ready(function() {
-                                            update_mgBook_table();
-                                            update_hiShow_table();
-                                        });
+                                        
 
                                         function update_mgBook_table() {
                                             $('#mgBook_table').DataTable({
@@ -277,7 +297,7 @@ include_once('./header.php');
                         </div>
                     </div>
 
-                    <div id="hi_show" style="display: none;" class="col-lg-10 mb-5 mb-lg-0 order-0 order-lg-1">
+                    <div id="hi_show" style="display: none;" class="col-lg-9 mb-5 mb-lg-0 order-0 order-lg-1">
                         <div class="post">
                             <div class="post-body">
                                 <div class="entry-header">
@@ -295,26 +315,51 @@ include_once('./header.php');
 
                                                 <th>เวลาจองเข้าร้าน</th>
                                                 <th>วันที่จองในระบบ</th>
-                                                <th>สถานะ</th>
+                                                <th class="text-center">สถานะ</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">B15</td>
-                                                <td>Thursday June 15 2022 16:58 </td>
-                                                <td>Thursday June 10 2022 16:58</td>
-                                                <td><span class="badge badge-success">สำเร็จ</span></td>
+                                            <?php
+                                            $thaiweek = array("วันอาทิตย์", "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัส", "วันศุกร์", "วันเสาร์");
+                                            $thaimonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
-                                            </tr>
-                                            <tr>
+                                            $sql_search = "SELECT *,
+                                                                DATE_FORMAT(rt.date_re, '%d') as Dd ,
+                                                                DATE_FORMAT(rt.date_re, '%c') as month ,
+                                                                DATE_FORMAT(rt.date_re, '%Y') as year, 
+
+                                                                DATE_FORMAT(rt.create_time, '%d') as year_Dd, 
+                                                                DATE_FORMAT(rt.create_time, '%c') as year_d, 
+                                                                DATE_FORMAT(rt.create_time, '%Y') as year_c ,
+                                                                DATE_FORMAT(rt.create_time, '%H : %i ') as time_c ,
+                                                                DATE_FORMAT(rt.timeStart_re, '%H : %i ') as timeStart_n 
+                                                            
+                                                        FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND rt.status_re = 2 ;";
+                                            $i_r = null;
+                                            foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) : //create_time
+                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month].' พ.ศ.'.$row->year+543;
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month] . ' ' . (543 + intval($row->year));
+                                                $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
+
+                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d] . ' ' . (543 + intval($row->year_c));
+                                                $timeC_re = $date_C . "</br> " . $row->time_c . ' น.';
+                                            ?>
+                                                <tr>
+                                                    <td class="text-center"><?php echo ++$i_r; ?></td>
+                                                    <td class="text-center"><?php echo 'โต๊ะ' . $row->zone_tb . '' . $row->no_tb ?></td>
+                                                    <td><?php echo $timeStart_re; ?> </td>
+                                                    <td><?php echo $timeC_re; ?> </td>
+                                                    <td class="text-center"><span class="badge badge-success">สำเร็จ</span></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            <!-- <tr>
                                                 <td class="text-center">2</td>
                                                 <td class="text-center">B15</td>
                                                 <td>Thursday June 15 2022 16:58 </td>
                                                 <td>Thursday June 10 2022 16:58</td>
                                                 <td><span class="badge badge-success">สำเร็จ</span></td>
 
-                                            </tr>
+                                            </tr> -->
                                         </tbody>
                                     </table>
                                     <script>
@@ -373,6 +418,7 @@ include_once('./header.php');
                                                     extend: 'print',
                                                     text: 'พิมพ์',
                                                     messageTop: '',
+
                                                     filename: function() {
                                                         // const d = new Date();
                                                         // // let time = d.getTime();
@@ -385,6 +431,159 @@ include_once('./header.php');
                                                     },
                                                     // title: 'รายชื่อสิทเข้าห้อง',
                                                     exportOptions: {
+                                                        pageSize: 'LEGAL'
+                                                        // columns: [0, 1, 2]
+                                                        // คอลัมส์ที่จะส่งออก
+                                                        // modifier: {
+                                                        //     page: 'all' // หน้าที่จะส่งออก all / current
+                                                        // },
+                                                        // stripHtml: true
+                                                    }
+                                                }],
+                                                retrieve: true,
+                                            });
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="hiC_show" style="display: none;" class="col-lg-9 mb-5 mb-lg-0 order-0 order-lg-1">
+                        <div class="post">
+                            <div class="post-body">
+                                <div class="entry-header">
+                                    <h2 class="entry-title">
+                                        <a href="javascript:void(0)">ประวัติการจองที่ยกเลิก</a>
+                                    </h2>
+                                </div><!-- header end -->
+
+                                <div class="entry-content">
+                                    <table id="hiCancelShow_table" class="table  table-borderless " style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">ลำดับ</th>
+                                                <th class="text-center">โต๊ะ</th>
+
+                                                <th>เวลาจองเข้าร้าน</th>
+                                                <th>วันที่จองในระบบ</th>
+                                                <th class="text-center">สถานะ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $thaiweek = array("วันอาทิตย์", "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัส", "วันศุกร์", "วันเสาร์");
+                                            $thaimonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+                                            $sql_search = "SELECT *,
+                                                                DATE_FORMAT(rt.date_re, '%d') as Dd ,
+                                                                DATE_FORMAT(rt.date_re, '%c') as month ,
+                                                                DATE_FORMAT(rt.date_re, '%Y') as year, 
+
+                                                                DATE_FORMAT(rt.create_time, '%d') as year_Dd, 
+                                                                DATE_FORMAT(rt.create_time, '%c') as year_d, 
+                                                                DATE_FORMAT(rt.create_time, '%Y') as year_c ,
+                                                                DATE_FORMAT(rt.create_time, '%H : %i ') as time_c ,
+                                                                DATE_FORMAT(rt.timeStart_re, '%H : %i ') as timeStart_n 
+                                                            
+                                                        FROM `reservation_tb` as rt INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.id_cm = '$ID' AND rt.status_re = 3 ;";
+                                            $i_r = null;
+                                            foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) : //create_time
+                                                // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month].' พ.ศ.'.$row->year+543;
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month] . ' ' . (543 + intval($row->year));
+                                                $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
+
+                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d] . ' ' . (543 + intval($row->year_c));
+                                                $timeC_re = $date_C . "</br> " . $row->time_c . ' น.';
+                                            ?>
+                                                <tr>
+                                                    <td class="text-center"><?php echo ++$i_r; ?></td>
+                                                    <td class="text-center"><?php echo 'โต๊ะ' . $row->zone_tb . '' . $row->no_tb ?></td>
+                                                    <td><?php echo $timeStart_re; ?> </td>
+                                                    <td><?php echo $timeC_re; ?> </td>
+                                                    <td class="text-center"><span class="badge badge-danger">ยกเลิกแล้ว</span></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            <!-- <tr>
+                                                <td class="text-center">2</td>
+                                                <td class="text-center">B15</td>
+                                                <td>Thursday June 15 2022 16:58 </td>
+                                                <td>Thursday June 10 2022 16:58</td>
+                                                <td><span class="badge badge-success">สำเร็จ</span></td>
+
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                    <script>
+                                        function update_hiCancelShow_table() {
+                                            $('#hiCancelShow_table').DataTable({
+                                                dom: 'lBfrtip',
+                                                lengthMenu: [
+                                                    [10, 25, 50, 60, -1],
+                                                    [10, 25, 50, 60, "All"]
+                                                ],
+                                                language: {
+                                                    sProcessing: " กำลังดำเนินการ...",
+                                                    sLengthMenu: " แสดง  _MENU_  แถว ",
+                                                    sZeroRecords: " ไม่พบข้อมูล ",
+                                                    sInfo: " แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว ",
+                                                    sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+                                                    sInfoFiltered: "( กรองข้อมูล  _MAX_  ทุกแถว )",
+                                                    sInfoPostFix: "",
+                                                    sSearch: "ค้นหา:",
+                                                    sUrl: "",
+                                                    oPaginate: {
+                                                        "sFirst": " เริ่มต้น ",
+                                                        "sPrevious": " ก่อนหน้า ",
+                                                        "sNext": " ถัดไป ",
+                                                        "sLast": " สุดท้าย "
+                                                    }
+                                                }, // sInfoEmpty: "แสดง 0 ถึง 0 ของ 0 เร็คคอร์ด",
+                                                processing: true, // แสดงข้อความกำลังดำเนินการ กรณีข้อมูลมีมากๆ จะสังเกตเห็นง่าย
+                                                //serverSide: true, // ใช้งานในโหมด Server-side processing
+                                                // กำหนดให้ไม่ต้องการส่งการเรียงข้อมูลค่าเริ่มต้น จะใช้ค่าเริ่มต้นตามค่าที่กำหนดในไฟล์ php
+
+                                                buttons: [{
+                                                    extend: 'excel',
+                                                    text: 'ส่งออก EXCEL',
+                                                    messageTop: '',
+                                                    filename: function() {
+                                                        // const d = new Date();
+                                                        // // let time = d.getTime();
+                                                        // let hour = d.getHours();
+                                                        // let minutes = d.getMinutes();
+                                                        // let day = d.getDay();
+                                                        // let month = d.getMonth();
+                                                        // let year = d.getFullYear();
+                                                        return "ประวัติการจอง "; //+hour+'-'+minutes + '-'+days +'-'+month +'-'+years
+                                                    },
+                                                    // title: 'รายชื่อสิทเข้าห้อง',
+                                                    exportOptions: {
+                                                        // columns: [0, 1, 2]
+                                                        // คอลัมส์ที่จะส่งออก
+                                                        // modifier: {
+                                                        //     page: 'all' // หน้าที่จะส่งออก all / current
+                                                        // },
+                                                        // stripHtml: true
+                                                    }
+                                                }, {
+                                                    extend: 'print',
+                                                    text: 'พิมพ์',
+                                                    messageTop: '',
+
+                                                    filename: function() {
+                                                        // const d = new Date();
+                                                        // // let time = d.getTime();
+                                                        // let hour = d.getHours();
+                                                        // let minutes = d.getMinutes();
+                                                        // let day = d.getDay();
+                                                        // let month = d.getMonth();
+                                                        // let year = d.getFullYear();
+                                                        return "ประวัติการจอง "; //+hour+'-'+minutes + '-'+days +'-'+month +'-'+years
+                                                    },
+                                                    // title: 'รายชื่อสิทเข้าห้อง',
+                                                    exportOptions: {
+                                                        pageSize: 'LEGAL'
                                                         // columns: [0, 1, 2]
                                                         // คอลัมส์ที่จะส่งออก
                                                         // modifier: {
