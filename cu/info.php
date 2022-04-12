@@ -1,5 +1,4 @@
-
-<?php 
+<?php
 include_once('./header.php');
 ?>
 <!DOCTYPE html>
@@ -171,9 +170,13 @@ include_once('./header.php');
                                 </div><!-- header end -->
 
                                 <div class="entry-content">
-                                    <strong class="info_name">ชื่อ : </strong> นายสมพล วิลา
+                                    <strong class="info_name">รหัสบัตรประชาชน : </strong> <?php echo $id_code ?>
+
                                     <br>
-                                    <strong class="info_name">เบอร์ : </strong> 0971271931
+                                    <strong class="info_name">ชื่อ : </strong> <?php echo $name_cm . ' ' . $lastname_cm ?>
+
+                                    <br>
+                                    <strong class="info_name">เบอร์ : </strong> <?php echo $tel_cm ?>
                                 </div>
 
                                 <div class="post-footer">
@@ -259,39 +262,78 @@ include_once('./header.php');
     <div class="modal fade" id="editInfo_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form id="" action="javascript:void(0)" method="POST">
+                <form id="edit_info" action="javascript:void(0)" method="POST">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">แก้ไขข้อมูลส่วนตัว</h5>
+                        <p>
+
+                        </p>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
+                        <input type="hidden" name="id_cm" value="<?php echo $ID ?>">
                         <label for="" class="form-control-label">ข้อมูลทั่วไป</label>
                         <div class="form-group">
-                            <input type="text" name="" value="xxxx" class="form-control" placeholder="ชื่อ">
+                            <input type="text" name="id_code" value="<?php echo $id_code ?>" class="form-control" placeholder="รหัสบัตรประชาชน">
                         </div>
                         <div class="form-group">
-                            <input type="text" name="" value="xxxx" class="form-control" placeholder="นามสกุล">
+                            <input type="text" name="name_cm" value="<?php echo $name_cm ?>" class="form-control" placeholder="ชื่อ">
                         </div>
                         <div class="form-group">
-                            <input type="tel" name="" value="0xxxxxxxxxx" class="form-control" placeholder="เบอร์">
+                            <input type="text" name="lastname_cm" value="<?php echo $lastname_cm ?>" class="form-control" placeholder="นามสกุล">
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="tel_cm" value="<?php echo $tel_cm ?>" class="form-control" placeholder="เบอร์">
                         </div>
                         <label for="" class="form-control-label">ข้อมูลล็อกอิน</label>
                         <div class="form-group">
-                            <input type="text" name="" value="xxxxxxx" class="form-control" placeholder="ชื่อผู้ใช้">
+                            <input type="text" name="uname_cm" value="<?php echo $uname_cm ?>" class="form-control" placeholder="ชื่อผู้ใช้">
                         </div>
                         <div class="form-group">
-                            <input type="password" name="" value="xxxxxx" class="form-control" placeholder="รหัสผ่าน">
+                            <input type="password" name="pass_cm" value="<?php echo $pass_cm ?>" class="form-control" placeholder="รหัสผ่าน">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                        <button type="button" class="btn btn-primary">แก้ไขข้อมูล</button>
+                        <button type="submit" class="btn btn-primary">แก้ไขข้อมูล</button>
                     </div>
                 </form>
             </div>
         </div>
+        <script>
+            $("#edit_info").submit(function() {
+                var inputs = $("#edit_info :input");
+                var values = {};
+                inputs.each(function() {
+                    values[this.name] = $(this).val();
+                });
+
+                $.ajax({
+                    url: "../controllers/customer_cl.php",
+                    type: "POST",
+                    data: {
+                        key: "edit_customer_cl",
+                        data: values
+                    },
+                    success: function(result, statusText) {
+                        console.log(result);
+                        if (result == 'success') {
+                            alert("แก้ไขข้อมูลสำเร็จ");
+                            location.reload();
+                        } else {
+                            alert("ไม่สามารถแก้ไขข้อมูลส่วนตัวได้");
+                            location.reload()
+                        }
+                    },
+                    error: function(result, statusText) {
+                        alert("ไม่สามารถแก้ไขข้อมูลส่วนตัวได้")
+                        location.reload()
+                    }
+                });
+            });
+        </script>
     </div>
 </body>
 

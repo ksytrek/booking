@@ -35,8 +35,11 @@
                     console.log(result);
                     if(result == 'success'){
                         alert("ยกเลิกการจองสำเร็จ");
+                        location.reload();
                     }else{
                         alert("ไม่สามารถยกเลิกได้ เนื่องเกินเวลาที่กำหนดไว้");
+                        location.reload();
+
                     }
                 },
                 error : function(jqXHR, statusText,error){
@@ -139,7 +142,9 @@
                     alert('จองโต๊ะสำเร็จ');
                     // $('#form-reserve').trigger("reset");
                     location.reload(true);
-                } else {
+                } else if(result == 'errorT') {
+                    alert("กรุณาเลือกวันในอนาคต");
+                }else {
                     alert("มีลูกค้าจองโต๊ะล่วงหน้าแล้ว");
                 }
             },
