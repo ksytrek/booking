@@ -1,4 +1,3 @@
-
 <script>
     function cancel_re(id) {
 
@@ -23,26 +22,26 @@
             // alert(timeNo)
             // alert(timeEn)
             $.ajax({
-                url : "../controllers/reserve_cl.php",
-                type : "POST",
-                data : {
+                url: "../controllers/reserve_cl.php",
+                type: "POST",
+                data: {
                     key: "cencel_reserve",
-                    id : id,
-                    timeNow : timeNo,
-                    timeEn : timeEn
+                    id: id,
+                    timeNow: timeNo,
+                    timeEn: timeEn
                 },
-                success : function(result, statusText, jqXHR){
+                success: function(result, statusText, jqXHR) {
                     console.log(result);
-                    if(result == 'success'){
+                    if (result == 'success') {
                         alert("ยกเลิกการจองสำเร็จ");
                         location.reload();
-                    }else{
+                    } else {
                         alert("ไม่สามารถยกเลิกได้ เนื่องเกินเวลาที่กำหนดไว้");
                         location.reload();
 
                     }
                 },
-                error : function(jqXHR, statusText,error){
+                error: function(jqXHR, statusText, error) {
                     alert('ยกเลิกการจองโต๊ะไม่สำเร็จ')
                 }
             });
@@ -92,7 +91,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label">เลือกเวลาที่เข้าร้าน</label>
-                        <input id="timeStart"  type="time" name="timeStart_re" value="16:00" class="form-control" required>
+                        <input id="timeStart" type="time" name="timeStart_re" value="16:00" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label">เวลาที่ร้านกำหนด (ประมาณ) </label>
@@ -129,29 +128,32 @@
 
         console.log(values);
 
-        $.ajax({
-            url: "./controller/reserve_cl.php",
-            type: "POST",
-            data: {
-                key: "form-reserve",
-                data: values
-            },
-            success: function(result, statusText, jqXHR) {
-                console.log(result);
-                if (result == 'success') {
-                    alert('จองโต๊ะสำเร็จ');
-                    // $('#form-reserve').trigger("reset");
-                    location.reload(true);
-                } else if(result == 'errorT') {
-                    alert("กรุณาเลือกวันในอนาคต");
-                }else {
-                    alert("มีลูกค้าจองโต๊ะล่วงหน้าแล้ว");
+        if (confirm("กรุณาตรวจสอบข้อมูลอีกครั้ง ก่อนกดยืนยัน")) {
+            $.ajax({
+                url: "./controller/reserve_cl.php",
+                type: "POST",
+                data: {
+                    key: "form-reserve",
+                    data: values
+                },
+                success: function(result, statusText, jqXHR) {
+                    console.log(result);
+                    if (result == 'success') {
+                        alert('จองโต๊ะสำเร็จ');
+                        // $('#form-reserve').trigger("reset");
+                        location.reload(true);
+                    } else if (result == 'errorT') {
+                        alert("กรุณาเลือกวันในอนาคต");
+                    } else {
+                        alert("มีลูกค้าจองโต๊ะล่วงหน้าแล้ว");
+                    }
+                },
+                error: function(jqXHR, statusText) {
+                    alert('จองโต๊ะไม่สำเร็จ กรุณาลองใหม่อีกครั้ง')
                 }
-            },
-            error: function(jqXHR, statusText) {
-                alert('จองโต๊ะไม่สำเร็จ กรุณาลองใหม่อีกครั้ง')
-            }
-        });
+            });
+        }
+
     });
     Date.prototype.addHours = function(h) {
         this.setTime(this.getTime() + (h * 60 * 60 * 1000));
