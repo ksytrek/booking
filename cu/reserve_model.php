@@ -19,7 +19,7 @@
         var timeNo = gHS + ":" + sNewse;
         var timeEn = timeEnd_add.getHours() + ":" + sNews;
         if (confirm('ต้องการยกเลิกจากจองใช้หรือไม่')) {
-            // alert(timeNo)
+            // alert(timeNo) 
             // alert(timeEn)
             $.ajax({
                 url: "../controllers/reserve_cl.php",

@@ -1,3 +1,6 @@
+<?php
+include_once('./header.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -152,18 +155,51 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="text-center">
-                                        <td>1</td>
-                                        <td class="">B</td>
-                                        <td>15</td>
-                                        <td>
-                                            <a href="javascript:$('#editDesk_modal').modal('show');" class="badge badge-success">แก้ไข</a>&nbsp;&nbsp;
-                                            <a href="javascript:confirm('ต้องการลบ ใช่หรือไม่')" class="badge badge-danger">ลบ</a>
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    $i = null;
+                                    foreach (Database::query("SELECT * FROM `service_table` WHERE status_tb = '0'", PDO::FETCH_OBJ) as $row) :
+                                    ?>
+                                        <tr class="text-center">
+                                            <td><?php echo ++$i; ?></td>
+                                            <td class=""><?php echo $row->zone_tb ?></td>
+                                            <td><?php echo $row->no_tb ?></td>
+                                            <td>
+                                                <a href="javascript:editDesk_modal('<?php echo $row->id_tb ?>','<?php echo $row->zone_tb ?>','<?php echo $row->no_tb ?>')" class="badge badge-success">แก้ไข</a>&nbsp;&nbsp;
+                                                <a href="javascript:delete_seTb(<?php echo $row->id_tb; ?>)" class="badge badge-danger">ลบ</a>
+                                            </td>
+                                        </tr>
+
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                             <script>
+                                function delete_seTb(id) {
+                                    if (confirm('ต้องการลบโต๊ะนี้ ใช่หรือไม่')) {
+                                        $.ajax({
+                                            url: "./controller/mgdeskzone_cl.php",
+                                            type: "POST",
+                                            data: {
+                                                key: "deleteSv_tb",
+                                                id: id
+                                            },
+                                            success: function(result, statusText) {
+                                                console.log(result);
+                                                if (result == 'success') {
+                                                    alert('ลบโต๊ะใหม่สำเร็จ');
+                                                    location.reload();
+                                                } else {
+                                                    alert("ไม่สามารถลบโต๊ะได้");
+                                                    location.reload();
+                                                }
+                                            },
+                                            error: function(result, statusText) {
+                                                alert("ไม่สามารถลบโต๊ะได้");
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                }
+
                                 $(document).ready(function() {
                                     ad_mgdeskZone();
                                 });
@@ -264,58 +300,145 @@
     <div class="modal fade" id="addDesk_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">เพิ่มโต๊ะใหม่</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="form-control-label">ชื่อโซน</label>
-                        <input id="" type="text" name="" value="" class="form-control">
+                <form id="form-addSv_tb" action="javascript:void(0)" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">เพิ่มโต๊ะใหม่</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label class="form-control-label">เลขโต๊ะ</label>
-                        <input id="" type="number" name="" value="" min="0" class="form-control">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-control-label">ชื่อโซน</label>
+                            <input type="text" name="zone_tb" value="" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">เลขโต๊ะ</label>
+                            <input type="number" name="no_tb" value="" min="0" class="form-control" required>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary">เพิ่มโต๊ะ</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-primary">เพิ่มโต๊ะ</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <script>
+        $("#form-addSv_tb").submit(function() {
+            var inputs = $("#form-addSv_tb :input");
+            var values = {};
+            inputs.each(function() {
+                values[this.name] = $(this).val();
+            });
 
+            console.log(values);
+            if (confirm("กรุณาตรวจสอบข้อมูลก่อนกดยืนยัน")) {
+                $.ajax({
+                    url: "./controller/mgdeskzone_cl.php",
+                    type: "POST",
+                    data: {
+                        key: "addSv_tb",
+                        data: values
+                    },
+                    success: function(result, statusText) {
+                        console.log(result);
+                        if (result == 'success') {
+                            alert('เพิ่มโต๊ะใหม่สำเร็จ');
+                            location.reload();
+                        } else {
+                            alert("ไม่สามารถเพิ่มโต๊ะได้");
+                            location.reload();
+                        }
+                    },
+                    error: function(result, statusText) {
+                        alert("ไม่สามารถเพิ่มโต๊ะได้");
+                        location.reload();
+                    }
+                });
+            }
+
+
+        });
+
+        function editDesk_modal(id, zone_tb, no_tb) {
+            // alert(id + zone_tb + no_tb);
+
+            $("#form-editSv_tb :input:hidden[name=id_tb]").val(id);
+            $("#form-editSv_tb :input:text[name=zone_tb]").val('' + zone_tb);
+            // $("#form-editSv_tb :input:number[name=no_tb]").val(12);
+            $("#form-editSv_tb :input[type=number][name=no_tb]").val(no_tb);
+
+            // $("input:radio[name=rd]:checked").val()
+            $('#editDesk_modal').modal('show');
+        }
+    </script>
 
     <div class="modal fade" id="editDesk_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">แก้ไขโต๊ะ</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="" value="">
-                    <div class="form-group">
-                        <label class="form-control-label">ชื่อโซน</label>
-                        <input id="" type="text" name="" value="B" class="form-control">
+                <form id="form-editSv_tb" action="javascript:void(0)" method="POST">
+                    <input type="hidden" name="id_tb" value="" required>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">แก้ไขข้อมูลโต๊ะ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label class="form-control-label">เลขโต๊ะ</label>
-                        <input id="" type="number" name="" value="15" min="0" class="form-control">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-control-label">ชื่อโซน</label>
+                            <input type="text" name="zone_tb" value="" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">เลขโต๊ะ</label>
+                            <input type="number" name="no_tb" value="" min="0" class="form-control" required> 
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary">แก้ไขโต๊ะ</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-primary">แก้ไขข้อมูลโต๊ะ</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <script>
+        $("#form-editSv_tb").submit(function() {
+            var inputs = $("#form-editSv_tb :input");
+            var values = {};
+            inputs.each(function() {
+                values[this.name] = $(this).val();
+            });
+
+            console.log(values);
+            if (confirm("ยืนยันเพื่่อ แก้ไขข้อมูลโต๊ะ")) {
+                $.ajax({
+                    url: "./controller/mgdeskzone_cl.php",
+                    type: "POST",
+                    data: {
+                        key: "editSv_tb",
+                        data: values
+                    },
+                    success: function(result, statusText) {
+                        console.log(result);
+                        if (result == 'success') {
+                            alert('แก้ไขข้อมูลโต๊ะใหม่สำเร็จ');
+                            location.reload();
+                        } else {
+                            alert("ไม่สามารถแก้ไขข้อมูลโต๊ะได้");
+                            location.reload();
+                        }
+                    },
+                    error: function(result, statusText) {
+                        alert("ไม่สามารถแก้ไขข้อมูลโต๊ะได้");
+                        location.reload();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

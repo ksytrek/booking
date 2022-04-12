@@ -18,9 +18,9 @@
     <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./mgdeskzone')">จัดการข้อมูลโต๊ะ-โซน</a></li>
     <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./bookhistory')">ประวัติการจอง</a></li>
     <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./mgecustomer')">จัดการข้อมูลลูกค้า</a></li>
-    <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./mgemployee.php')">ข้อมูลพนักงาน</a></li>
-    <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./datareport')">รายงานข้อมูล</a></li>
+    <!-- <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./mgemployee.php')">ข้อมูลพนักงาน</a></li> -->
+    <!-- <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./datareport')">รายงานข้อมูล</a></li> -->
     <li class="nav-item"><a class="nav-link" href="javascript:location.assign('./infom')">แก้ไขข้อมูลส่วนตัว</a></li>
-    <li class="nav-item"><a class="nav-link" href="../">ออกจากระบบ</a></li>
+    <li class="nav-item"><a class="nav-link" href="../controllers/logout.php">ออกจากระบบ</a></li>
 
 </ul>

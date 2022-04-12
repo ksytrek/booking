@@ -1,3 +1,6 @@
+<?php
+include_once('./header.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -260,19 +263,47 @@
                                         <th class="text-center">โต๊ะ</th>
                                         <th>เวลาจองเข้าร้าน</th>
                                         <th>เวลาจองในระบบ</th>
-                                        <th>สถานะ</th>
+                                        <th class="text-center">สถานะ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">สมพล วิลา</td>
-                                        <td class="text-center">B15</td>
-                                        <td>Thursday June 15 2022 16:58 </td>
-                                        <td>Thursday June 10 2022 16:58</td>
-                                        <td>จ่ายเงินแล้ว</td>
-                                        
-                                    </tr>
+                                    <?php
+                                    $thaiweek = array("วันอาทิตย์", "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัส", "วันศุกร์", "วันเสาร์");
+                                    $thaimonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+                                    $sql_search = "SELECT *,
+                                                        DATE_FORMAT(rt.date_re, '%d') as Dd ,
+                                                        DATE_FORMAT(rt.date_re, '%c') as month ,
+                                                        DATE_FORMAT(rt.date_re, '%Y') as year, 
+
+                                                        DATE_FORMAT(rt.create_time, '%d') as year_Dd, 
+                                                        DATE_FORMAT(rt.create_time, '%c') as year_d, 
+                                                        DATE_FORMAT(rt.create_time, '%Y') as year_c ,
+                                                        DATE_FORMAT(rt.create_time, '%H : %i ') as time_c ,
+                                                        DATE_FORMAT(rt.timeStart_re, '%H : %i ') as timeStart_n 
+                                
+                                                FROM `reservation_tb` as rt 
+                                                        INNER JOIN service_table as st ON st.id_tb = rt.id_tb
+                                                        INNER JOIN customer as cm ON cm.id_cm = rt.id_cm
+                                                WHERE  rt.status_re = 2;";
+                                    $i_r = null;
+                                    foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) : //create_time
+                                        // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
+                                        $date = '' . $row->Dd . ' ' . $thaimonth[$row->month - 1] . ' ' . (543 + intval($row->year));
+                                        $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
+
+                                        $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d - 1] . ' ' . (543 + intval($row->year_c));
+                                        $timeC_re = $date_C . "</br> " . $row->time_c . ' น.';
+                                    ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo ++$i_r; ?></td>
+                                            <td class="text-center"><?php echo $row->name_cm.' '.$row->lastname_cm ;?></td>
+                                            <td class="text-center"><?php echo 'โต๊ะ' . $row->zone_tb . '' . $row->no_tb ?></td>
+                                            <td><?php echo $timeStart_re; ?> </td>
+                                            <td><?php echo $timeC_re; ?> </td>
+                                            <td class="text-center"><span class="badge badge-success">สำเร็จ</span></td>
+                                        </tr>
+                                    <?php endforeach; ?>
 
                                 </tbody>
                             </table>

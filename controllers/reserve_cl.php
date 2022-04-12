@@ -65,21 +65,134 @@ if (isset($_POST['key']) && $_POST['key'] == 'cencel_reserve') {
     } else {
         echo "error";
     }
-
-    // if ($row_search == null) {
-    //     // 
-    //     echo " สามารถยกเลิกการจองได้ (ไม่พบข้อมูล) ";
-    //     echo $date." ".$TimeNP." ".$TimeEP;
+}
 
 
+if (isset($_POST['key']) && $_POST['key'] == 'cencel_reserveAd') {
+    $id = $_POST['id'];
+
+    if (Database::query("UPDATE `reservation_tb` SET `status_re` = '3' WHERE `reservation_tb`.`id_re` = '$id';")) {
+        $sql_search = "SELECT * FROM `reservation_tb`  as rt  INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.status_re = '0' or rt.status_re = '1'";
+        $resultArray = array();
+        $json_txt = "";
+
+        if ($show_tebelig = Database::query($sql_search, PDO::FETCH_OBJ)) {
+            foreach ($show_tebelig  as $row) {
+                $title = 'โต๊ะ ' . $row->zone_tb . ' ' . $row->no_tb;
+
+                $dateStart = $row->date_re;
+                $timeStart = $row->timeStart_re;
+                $timeEnd = $row->timeEnd_re;
+
+                $new_row = [
+                    "title" => $title,
+                    "start" => $dateStart . 'T' . $timeStart . '+07:00',
+                    "end" => $dateStart . 'T' . $timeEnd . '+07:00',
+                ];
+
+                array_push($resultArray, $new_row);
+            }
+            $json_txt =  json_encode($resultArray);
+        } else {
+            $json_txt =  json_encode($resultArray);
+        }
+
+        $Afile = "events.json";
+        $myfile = fopen("../json/" . $Afile, "w") or die("error");
+        if (fwrite($myfile, $json_txt)) {
+            echo "success";
+        }
+        fclose($myfile);
+    } else {
+
+        echo "error";
+    }
+}
+
+// update_reAd
+if (isset($_POST['key']) && $_POST['key'] == 'update_reAd') {
+    $id = $_POST['id'];
+
+    if (Database::query("UPDATE `reservation_tb` SET `status_re` = '1' WHERE `reservation_tb`.`id_re` = '$id';")) {
+        $sql_search = "SELECT * FROM `reservation_tb`  as rt  INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.status_re = '0' or rt.status_re = '1'";
+        $resultArray = array();
+        $json_txt = "";
+
+        if ($show_tebelig = Database::query($sql_search, PDO::FETCH_OBJ)) {
+            foreach ($show_tebelig  as $row) {
+                $title = 'โต๊ะ ' . $row->zone_tb . ' ' . $row->no_tb;
+
+                $dateStart = $row->date_re;
+                $timeStart = $row->timeStart_re;
+                $timeEnd = $row->timeEnd_re;
+
+                $new_row = [
+                    "title" => $title,
+                    "start" => $dateStart . 'T' . $timeStart . '+07:00',
+                    "end" => $dateStart . 'T' . $timeEnd . '+07:00',
+                ];
+
+                array_push($resultArray, $new_row);
+            }
+            $json_txt =  json_encode($resultArray);
+        } else {
+            $json_txt =  json_encode($resultArray);
+        }
+
+        $Afile = "events.json";
+        $myfile = fopen("../json/" . $Afile, "w") or die("error");
+        if (fwrite($myfile, $json_txt)) {
+            echo "success";
+        }
+        fclose($myfile);
+    } else {
+
+        echo "error";
+    }
+}
 
 
-    // echo $newDate;
+if (isset($_POST['key']) && $_POST['key'] == 'success_reAd') {
+    $id = $_POST['id'];
+
+    if (Database::query("UPDATE `reservation_tb` SET `status_re` = '2' WHERE `reservation_tb`.`id_re` = '$id';")) {
+        $sql_search = "SELECT * FROM `reservation_tb`  as rt  INNER JOIN service_table as st ON st.id_tb = rt.id_tb WHERE rt.status_re = '0' or rt.status_re = '1'";
+        $resultArray = array();
+        $json_txt = "";
+
+        if ($show_tebelig = Database::query($sql_search, PDO::FETCH_OBJ)) {
+            foreach ($show_tebelig  as $row) {
+                $title = 'โต๊ะ ' . $row->zone_tb . ' ' . $row->no_tb;
+
+                $dateStart = $row->date_re;
+                $timeStart = $row->timeStart_re;
+                $timeEnd = $row->timeEnd_re;
+
+                $new_row = [
+                    "title" => $title,
+                    "start" => $dateStart . 'T' . $timeStart . '+07:00',
+                    "end" => $dateStart . 'T' . $timeEnd . '+07:00',
+                ];
+
+                array_push($resultArray, $new_row);
+            }
+            $json_txt =  json_encode($resultArray);
+        } else {
+            $json_txt =  json_encode($resultArray);
+        }
+
+        $Afile = "events.json";
+        $myfile = fopen("../json/" . $Afile, "w") or die("error");
+        if (fwrite($myfile, $json_txt)) {
+            echo "success";
+        }
+        fclose($myfile);
+    } else {
+
+        echo "error";
+    }
+}
 
 
-    // $date = date_format(time(), '%H:%i');
-    // $newDate = date('H:i:s', strtotime($date. ' +100 minutes'));
-    //   
-    // echo $timeNow. " " . $timeEn;
-    // echo $TimeNP." " .$TimeEP ;
+if (isset($_POST['key']) && $_POST['key'] == '') {
 }

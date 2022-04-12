@@ -150,37 +150,68 @@
         <!-- Header start -->
         <header id="header" class="header-two">
             <div class="site-navigation">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <nav class="navbar navbar-expand-lg navbar-light p-0">
+                <form id="form-login-ad" action="javascript:void(0)" method="POST">
 
-                                <div class="logo">
-                                    <a class="d-block" href="">
-                                        <img loading="lazy" src="images/logo1.png" alt="Constra">
-                                    </a>
-                                </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <nav class="navbar navbar-expand-lg navbar-light p-0">
+                                    <div class="logo">
+                                        <a class="d-block" href="">
+                                            <img loading="lazy" src="images/logo1.png" alt="Constra">
+                                        </a>
+                                    </div>
 
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                                    <span class="navbar-toggler-icon"></span>
-                                </button>
+                                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
 
-                                <div id="navbar-collapse" class="collapse navbar-collapse">
+                                    <div id="navbar-collapse" class="collapse navbar-collapse">
 
-                                    <ul class="nav navbar-nav ml-auto align-items-center" style="padding:10px ;">
-                                        <li class="nav-item"><input type="text" name="" id="" class="form-control" placeholder="ชื่อผู้ใช้"></li>
-                                        <li class="nav-item"><input type="text" name="" id="" class="form-control" placeholder="รหัสผ่าน"></li>
-                                        <li class="header-get-a-quote">
-                                            <button onclick="window.location.assign('./ad/')" type="submit" class="btn btn-primary">Login</button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </nav>
+                                        <ul class="nav navbar-nav ml-auto align-items-center" style="padding:10px ;">
+                                            <li class="nav-item"><input type="text" name="uname_ad" class="form-control" placeholder="ชื่อผู้ใช้" required></li>
+                                            <li class="nav-item"><input type="password" name="pass_ad" class="form-control" placeholder="รหัสผ่าน" required></li>
+                                            <li class="header-get-a-quote">
+                                                <button type="submit" class="btn btn-primary">Login</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                </form>
             </div>
+            <script>
+                $("#form-login-ad").submit(function() {
+                    var inputs = $("#form-login-ad :input");
+                    var values = {};
+                    inputs.each(function() {
+                        values[this.name] = $(this).val();
+                    });
+                    console.log(values);
+
+                    $.ajax({
+                        url: "./controllers/login_ad.php",
+                        type: "POST",
+                        data: {
+                            key: "form-login-ad",
+                            data: values
+                        },
+                        success: function(result, statusText, jqXHR) {
+                            console.log(result)
+                            if (result == 'success') {
+                                location.assign('./ad/')
+                            } else {
+                                alert("กรอกข้อมูลไม่ถูกต้องกรุณาตรวจสอบ ชื่อผู้ใช้และรหัสผ่าน ใหม่");
+                            }
+                        },
+                        error: function(jqXHR, statusText, errorTh) {
+                            alert('ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่อีกครั้ง');
+                        }
+                    });
+                });
+            </script>
         </header>
         <div class="banner-carousel banner-carousel-2 mb-0">
             <div class="banner-carousel-item" style="background-image:url(images/ch2.png)">

@@ -1,3 +1,7 @@
+<?php
+include_once('./header.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -225,32 +229,6 @@
 
             </div>
         </header>
-        <div class="banner-carousel banner-carousel-2 mb-0">
-            <div class="banner-carousel-item" style="background-image:url(../images/ch2.png)">
-                <div class="container">
-                    <div class="box-slider-content">
-                        <div class="box-slider-text">
-                            <h2 class="box-slide-title">ยินดีต้อนรับเข้าสู่ร้านปลาวาฬใจดี</h2>
-                            <h3 class="box-slide-sub-title">WELCOME!</h3>
-                            <p class="box-slide-description">เปิดให้บริการทุกวันตั้งแต่เวลา16:00-23:00 น.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="banner-carousel-item" style="background-image:url(../images/ch.png)">
-                <div class="container">
-                    <div class="box-slider-content">
-                        <div class="box-slider-text">
-                            <h2 class="box-slide-title">ยินดีต้อนรับเข้าสู่ร้านปลาวาฬใจดี</h2>
-                            <h3 class="box-slide-sub-title">WELCOME!</h3>
-                            <p class="box-slide-description">เปิดให้บริการทุกวันตั้งแต่เวลา16:00-23:00 น.</p>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- ตารางจองลูกค้า  -->
         <section class="call-to-action no-padding">
@@ -291,34 +269,142 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">สมพล วิลา</td>
-                                        <td class="text-center">B15</td>
-                                        <td>Thursday June 15 2022 16:58 </td>
-                                        <td>Thursday June 10 2022 16:58</td>
-                                        <td><span class="badge badge-primary">รอยืนยัน</span></td>
-                                        <td>
-                                            <a href="javascript:confirm('ต้องการยืนยันการจองคิว ใช่หรือไม่')" class="badge badge-success">ยืนยัน</a>&nbsp;&nbsp;
-                                            <a href="javascript:confirm('ต้องการยกเลิกการจองคิว ใช่หรือไม่')" class="badge badge-danger">ยกเลิก</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">2</td>
-                                        <td class="text-center">วนิดา สิงห์ภิรมย์</td>
-                                        <td class="text-center">B15</td>
-                                        <td>Thursday June 15 2022 16:58 </td>
-                                        <td>Thursday June 10 2022 16:58</td>
-                                        <td><span class="badge badge-warning">ยืนยันแล้ว</span></td>
-                                        <td>
-                                            <a href="javascript:confirm('ยืนยันการจ่ายเงิน ใช่หรือไม่')" class="badge badge-primary">สำเร็จ</a>&nbsp;&nbsp;
-                                            <a href="javascript:confirm('ลูกค้าไม่เข้านั่งต้องการยกเลิก ใช่หรือไม่')" class="badge badge-danger">ยกเลิก</a>
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    $thaiweek = array("วันอาทิตย์", "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัส", "วันศุกร์", "วันเสาร์");
+                                    $thaimonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+                                    $sql_search = "SELECT *, 
+                                                            DATE_FORMAT(rt.date_re, '%d') as Dd , 
+                                                            DATE_FORMAT(rt.date_re, '%c') as month , 
+                                                            DATE_FORMAT(rt.date_re, '%Y') as year, 
+                                                            DATE_FORMAT(rt.timeStart_re, '%H : %i ') as timeStart_n , 
+                                                            DATE_FORMAT(rt.timeEnd_re, '%H : %i ') as timeEnd_n 
+                                                    FROM `reservation_tb` as rt 
+                                                            INNER JOIN service_table as st ON st.id_tb = rt.id_tb 
+                                                            INNER JOIN customer as cm ON cm.id_cm = rt.id_cm 
+                                                        WHERE (rt.status_re != 2 AND rt.status_re != 3);";
+                                    $i_r = null;
+                                    foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) :
+                                        // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
+                                        $date = '' . $row->Dd . ' ' . $thaimonth[$row->month - 1] . ' ' . (543 + intval($row->year));;
+                                        $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
+                                        $timeEnd_re = $date . "</br> " . $row->timeEnd_n . ' น.';
+                                    ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo ++$i_r; ?></td>
+                                            <td class="text-center"><?php echo $row->name_cm . " " . $row->lastname_cm ?></td>
+                                            <td class="text-center"><?php echo $row->zone_tb . "" . $row->no_tb ?></td>
+                                            <td><?php echo $timeStart_re; ?></td>
+                                            <td><?php echo $timeEnd_re; ?></td>
+                                            <td>
+                                                <?php
+                                                if ($row->status_re == '0') {
+                                                    echo '<span class="badge badge-primary">รอยืนยัน</span>';
+                                                } else {
+                                                    echo '<span class="badge badge-warning">ยืนยันแล้ว</span>';
+                                                }
+                                                ?>
+
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if ($row->status_re == '0') {
+                                                    echo "<a href=\"javascript:update_reAd('$row->id_re')\" class='badge badge-success'>ยืนยัน</a>";
+                                                } else {
+                                                    echo "<a href=\"javascript:success_reAd('$row->id_re')\" class='badge badge-primary'>สำเร็จ</a>";
+                                                }
+                                                ?>
+                                                &nbsp;&nbsp;
+                                                <a href="javascript:cencel_reAd('<?php echo $row->id_re ?>')" class="badge badge-danger">ยกเลิก</a>
+                                            </td>
+                                        </tr>
+
+                                    <?php endforeach; ?>
 
                                 </tbody>
                             </table>
                             <script>
+                                function update_reAd(id) {
+                                    if (confirm('ต้องการตอบรับจากจองโต๊ะนี้ ใช่หรือไม่')) {
+                                        $.ajax({
+                                            url: "../controllers/reserve_cl.php",
+                                            type: "POST",
+                                            data: {
+                                                key: "update_reAd",
+                                                id: id
+                                            },
+                                            success: function(result, statusText, jqXHR) {
+                                                console.log(result);
+                                                if (result == 'success') {
+                                                    alert("ตอบรับการจองสำเร็จ");
+                                                    location.reload();
+                                                } else {
+                                                    alert('ตอบรับการจองโต๊ะไม่สำเร็จ')
+                                                    location.reload();
+
+                                                }
+                                            },
+                                            error: function(jqXHR, statusText, error) {
+                                                alert('ตอบรับการจองโต๊ะไม่สำเร็จ')
+                                            }
+                                        });
+                                    }
+                                }
+
+                                function success_reAd(id) {
+                                    if (confirm('ลูกค้าชำระเงินเสร็จสิ้น ใช่หรือไม่')) {
+                                        $.ajax({
+                                            url: "../controllers/reserve_cl.php",
+                                            type: "POST",
+                                            data: {
+                                                key: "success_reAd",
+                                                id: id
+                                            },
+                                            success: function(result, statusText, jqXHR) {
+                                                console.log(result);
+                                                if (result == 'success') {
+                                                    alert("บันทึกลงประวัติการจองสำเร็จ");
+                                                    location.reload();
+                                                } else {
+                                                    alert('บันทึกลงประวัติการจองไม่สำเร็จ')
+                                                    location.reload();
+
+                                                }
+                                            },
+                                            error: function(jqXHR, statusText, error) {
+                                                alert('บันทึกลงประวัติการจองไม่สำเร็จ')
+                                            }
+                                        });
+                                    }
+                                }
+
+                                function cencel_reAd(id) {
+                                    if (confirm('ต้องการยกเลิกจากจองใช้หรือไม่')) {
+                                        $.ajax({
+                                            url: "../controllers/reserve_cl.php",
+                                            type: "POST",
+                                            data: {
+                                                key: "cencel_reserveAd",
+                                                id: id
+                                            },
+                                            success: function(result, statusText, jqXHR) {
+                                                console.log(result);
+                                                if (result == 'success') {
+                                                    alert("ยกเลิกการจองสำเร็จ");
+                                                    location.reload();
+                                                } else {
+                                                    alert('ยกเลิกการจองโต๊ะไม่สำเร็จ')
+                                                    location.reload();
+
+                                                }
+                                            },
+                                            error: function(jqXHR, statusText, error) {
+                                                alert('ยกเลิกการจองโต๊ะไม่สำเร็จ')
+                                            }
+                                        });
+                                    }
+                                }
+
                                 $(document).ready(function() {
                                     ad_mgBook_table();
                                 });
@@ -389,7 +475,7 @@
             </div>
         </section>
 
-        <section id="ts-features"  class="ts-features pb-2">
+        <section id="ts-features" class="ts-features pb-2">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 ">

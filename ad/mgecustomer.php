@@ -1,3 +1,6 @@
+<?php
+include_once('./header.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -270,39 +273,79 @@
     <div class="modal fade" id="addCustomer_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">เพิ่มลูกค้าใหม่</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <label for="" class="form-control-label">ข้อมูลทั่วไป</label>
-                    <div class="form-group">
-                        <input type="text" name="" value="" class="form-control" placeholder="ชื่อ">
+                <form id="form-addCustomer" action="javascript:void(0)" method="POST">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">เพิ่มลูกค้าใหม่</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <input type="text" name="" value="" class="form-control" placeholder="นามสกุล">
+                    <div class="modal-body">
+                        <label for="" class="form-control-label">ข้อมูลทั่วไป</label>
+                        <div class="form-group">
+                            <input type="text" name="id_code" value="" class="form-control" placeholder="รหัสบัตรประชาชน">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="name_cm" value="" class="form-control" placeholder="ชื่อ">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="lastname_cm" value="" class="form-control" placeholder="นามสกุล">
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="tel_cm" value="" class="form-control" placeholder="เบอร์">
+                        </div>
+                        <label for="" class="form-control-label">ข้อมูลล็อกอิน</label>
+                        <div class="form-group">
+                            <input type="text" name="uname_cm" value="" class="form-control" placeholder="ชื่อผู้ใช้">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="pass_cm" value="" class="form-control" placeholder="รหัสผ่าน">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <input type="tel" name="" value="" class="form-control" placeholder="เบอร์">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-primary">เพิ่มลูกค้า</button>
                     </div>
-                    <label for="" class="form-control-label">ข้อมูลล็อกอิน</label>
-                    <div class="form-group">
-                        <input type="text" name="" value="" class="form-control" placeholder="ชื่อผู้ใช้">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" name="" value="" class="form-control" placeholder="รหัสผ่าน">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary">เพิ่มลูกค้า</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
+    <script>
+        $("#form-addCustomer").submit(function() {
+            var $inputs = $("#form-addCustomer :input");
+            var values = {};
+            $inputs.each(function() {
+                values[this.name] = $(this).val();
+            });
+            console.log(values);
+
+            $.ajax({
+                url: "../controllers/register_index.php",
+                type: "POST",
+                data: {
+                    key: "form_register",
+                    data: values
+                },
+                success: function(result, statusText, jqXHR) {
+                    if (result == "lcodeX01") {
+                        alert('มีรหัสประชาชนลูกค้าในระบบแล้ว');
+                    } else if (result == 'success') {
+                        alert('สมัครสมาชิกสำเร็จ');
+                        location.reload();
+                    } else {
+                        alert('ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่อีกครั้ง');
+                        location.reload();
+                    }
+                },
+                error(jqXHR, statusText) {
+                    alert('ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่อีกครั้ง');
+                    location.reload();
+                }
+            });
+        });
+    </script>
 
     <div class="modal fade" id="editCustomer_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">

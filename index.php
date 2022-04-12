@@ -394,7 +394,7 @@
                         <div class="col-md-6">
                             <div class="footer-menu text-center text-md-right">
                                 <ul class="list-unstyled">
-                                    <li><a href="javascript:location.assign('./index_em.php')">เฉพาะพนักงาน</a></li>
+                                    <li><a href="javascript:location.assign('./index_ad.php')">เฉพาะพนักงาน</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -503,6 +503,7 @@
                         alert('มีรหัสประชาชนลูกค้าในระบบแล้ว');
                     } else if (result == 'success') {
                         alert('สมัครสมาชิกสำเร็จ');
+                        location.reload();
                     } else {
                         alert('ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่อีกครั้ง');
                         location.reload();
