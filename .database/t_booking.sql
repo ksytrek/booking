@@ -1,15 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 11, 2022 at 02:49 PM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
+-- Generation Time: Apr 13, 2022 at 06:49 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+07:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -30,17 +30,18 @@ SET time_zone = "+00:00";
 CREATE TABLE `admin` (
   `id_ad` int(11) NOT NULL,
   `name_ad` varchar(25) NOT NULL,
-  `lastname_em` varchar(25) NOT NULL,
-  `uname_em` varchar(25) NOT NULL,
-  `pass_em` varchar(25) NOT NULL
+  `lastname_ad` varchar(25) NOT NULL,
+  `uname_ad` varchar(25) NOT NULL,
+  `pass_ad` varchar(25) NOT NULL,
+  `tel_ad` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`id_ad`, `name_ad`, `lastname_em`, `uname_em`, `pass_em`) VALUES
-(1, 'admin', 'admin', 'admin', 'admin');
+INSERT INTO `admin` (`id_ad`, `name_ad`, `lastname_ad`, `uname_ad`, `pass_ad`, `tel_ad`) VALUES
+(1, 'admin', 'admin', 'admin', 'admin', '0912345678');
 
 -- --------------------------------------------------------
 
@@ -58,13 +59,6 @@ CREATE TABLE `customer` (
   `pass_cm` varchar(25) NOT NULL,
   `status_cm` int(2) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `customer`
---
-
-INSERT INTO `customer` (`id_cm`, `id_code`, `name_cm`, `lastname_cm`, `uname_cm`, `tel_cm`, `pass_cm`, `status_cm`) VALUES
-(1, '1339900662224', 'SOMPHOL', 'WILA', 'user', '0971271931', 'user', 0);
 
 -- --------------------------------------------------------
 
@@ -100,20 +94,6 @@ CREATE TABLE `reservation_tb` (
   `status_re` varchar(2) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `reservation_tb`
---
-
-INSERT INTO `reservation_tb` (`id_re`, `id_cm`, `id_tb`, `people_sum`, `date_re`, `timeStart_re`, `timeEnd_re`, `create_time`, `status_re`) VALUES
-(5, 1, 1, '4', '2022-04-10', '16:00:00', '18:00:00', '2022-04-10 22:55:25', '0'),
-(6, 1, 1, '4', '2022-04-12', '16:00:00', '18:00:00', '2022-04-10 22:55:50', '0'),
-(7, 1, 1, '4', '2022-04-11', '16:00:00', '18:00:00', '2022-04-10 22:55:53', '0'),
-(9, 1, 1, '3', '2022-04-20', '16:00:00', '18:00:00', '2022-04-10 22:59:02', '0'),
-(10, 1, 1, '4', '2022-04-10', '18:01:00', '19:41:00', '2022-04-10 22:59:32', '0'),
-(11, 1, 1, '4', '2022-04-10', '21:00:00', '22:40:00', '2022-04-10 23:00:17', '0'),
-(12, 1, 1, '4', '2022-04-13', '16:00:00', '18:00:00', '2022-04-11 09:26:47', '0'),
-(13, 1, 1, '4', '2022-04-06', '18:20:00', '20:00:00', '2022-04-11 09:27:48', '0');
-
 -- --------------------------------------------------------
 
 --
@@ -126,13 +106,6 @@ CREATE TABLE `service_table` (
   `no_tb` varchar(25) NOT NULL,
   `status_tb` varchar(2) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `service_table`
---
-
-INSERT INTO `service_table` (`id_tb`, `zone_tb`, `no_tb`, `status_tb`) VALUES
-(1, 'A', '1', '0');
 
 --
 -- Indexes for dumped tables
@@ -184,7 +157,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id_cm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_cm` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -196,13 +169,13 @@ ALTER TABLE `employee`
 -- AUTO_INCREMENT for table `reservation_tb`
 --
 ALTER TABLE `reservation_tb`
-  MODIFY `id_re` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_re` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `service_table`
 --
 ALTER TABLE `service_table`
-  MODIFY `id_tb` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_tb` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
