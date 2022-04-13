@@ -151,6 +151,7 @@ include_once('./header.php');
                                 <thead>
                                     <tr class="text-center">
                                         <th>ลำดับ</th>
+                                        <th>รหัสบัตร ปปช.</th>
                                         <th>ชื่อ - สกุล</th>
                                         <th>เบอร์โทร</th>
                                         <th>ชื่อผู้ใช้</th>
@@ -159,20 +160,54 @@ include_once('./header.php');
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="text-center">
-                                        <td>1</td>
-                                        <td>สมพล วิลา</td>
-                                        <td>0971271931</td>
-                                        <td>user145</td>
-                                        <td>xcc145</td>
-                                        <td>
-                                            <a href="javascript:$('#editCustomer_modal').modal('show');" class="badge badge-success">แก้ไข</a>&nbsp;&nbsp;
-                                            <a href="javascript:confirm('ต้องการลบ ใช่หรือไม่')" class="badge badge-danger">ลบ</a>
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    $i = null;
+                                    foreach (Database::query("SELECT * FROM `customer` WHERE status_cm = '0'", PDO::FETCH_OBJ) as $row) :
+                                    ?>
+                                        <tr class="text-center">
+                                            <td><?php echo ++$i; ?></td>
+                                            <td><?php echo $row->id_code; ?></td>
+                                            <td><?php echo $row->name_cm . ' ' . $row->lastname_cm; ?></td>
+                                            <td><?php echo $row->tel_cm ?></td>
+                                            <td><?php echo $row->uname_cm ?></td>
+                                            <td><?php echo $row->pass_cm ?></td>
+                                            <td>
+                                                <a href="javascript:editCustomer_modal('<?php echo $row->id_cm; ?>','<?php echo $row->id_code; ?>','<?php echo $row->name_cm; ?>', '<?php echo $row->lastname_cm; ?>', '<?php echo $row->tel_cm ?>', '<?php echo $row->uname_cm ?>', '<?php echo $row->pass_cm ?>')" class="badge badge-success">แก้ไข</a>&nbsp;&nbsp;
+                                                <a href="javascript:deleteCustomer('<?php echo $row->id_cm ?>')" class="badge badge-danger">ลบ</a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                             <script>
+                                // $('#editCustomer_modal').modal('show');
+                                function deleteCustomer(id) {
+                                    if (confirm('ต้องการลบ ใช่หรือไม่')) {
+                                        $.ajax({
+                                            url: "./controller/mgecustomer_cl.php",
+                                            type: "POST",
+                                            data: {
+                                                key: "deleteCustomer",
+                                                id_cm: id
+                                            },
+                                            success: function(result, statusText, jqXHR) {
+                                                console.log(result);
+                                                if (result == 'success') {
+                                                    alert('ลบข้อมูลลูกค้าสำเร็จ');
+                                                    location.reload();
+                                                } else {
+                                                    alert('ไม่สามารถลบข้อมูลลูกค้าได้ กรุณาลองใหม่อีกครั้ง');
+                                                    location.reload();
+                                                }
+                                            },
+                                            error(jqXHR, statusText) {
+                                                alert('ไม่สามารถลบข้อมูลลูกค้าได้ กรุณาลองใหม่อีกครั้ง');
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                }
+
                                 $(document).ready(function() {
                                     ad_mgCustomer();
                                 });
@@ -334,6 +369,8 @@ include_once('./header.php');
                     } else if (result == 'success') {
                         alert('สมัครสมาชิกสำเร็จ');
                         location.reload();
+                    } else if (result == 'lcodeX02') {
+                        alert('ไม่สามารถใช้ ชื่อผู้ใช้ นี้ได้');
                     } else {
                         alert('ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่อีกครั้ง');
                         location.reload();
@@ -350,40 +387,99 @@ include_once('./header.php');
     <div class="modal fade" id="editCustomer_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">แก้ไขข้อมูลลูกค้า</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="" value="">
-
-                    <label for="" class="form-control-label">ข้อมูลทั่วไป</label>
-                    <div class="form-group">
-                        <input type="text" name="" value="สมพล" class="form-control" placeholder="ชื่อ">
+                <form id="form-editCustomer" action="javascript:void(0)" method="POST">
+                    <input type="hidden" name="id_cm" value="">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">แก้ไขข้อมูลลูกค้าใหม่</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <input type="text" name="" value="วิลา" class="form-control" placeholder="นามสกุล">
+                    <div class="modal-body">
+                        <label for="" class="form-control-label">ข้อมูลทั่วไป</label>
+                        <div class="form-group">
+                            <input type="text" name="id_code" value="" class="form-control" placeholder="รหัสบัตรประชาชน">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="name_cm" value="" class="form-control" placeholder="ชื่อ">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="lastname_cm" value="" class="form-control" placeholder="นามสกุล">
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="tel_cm" value="" class="form-control" placeholder="เบอร์">
+                        </div>
+                        <label for="" class="form-control-label">ข้อมูลล็อกอิน</label>
+                        <div class="form-group">
+                            <input type="text" name="uname_cm" value="" class="form-control" placeholder="ชื่อผู้ใช้">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="pass_cm" value="" class="form-control" placeholder="รหัสผ่าน">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <input type="tel" name="" value="0971271931" class="form-control" placeholder="เบอร์">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-primary">แก้ไขข้อมูลลูกค้า</button>
                     </div>
-                    <label for="" class="form-control-label">ข้อมูลล็อกอิน</label>
-                    <div class="form-group">
-                        <input type="text" name="" value="user145" class="form-control" placeholder="ชื่อผู้ใช้">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" name="" value="xcc145" class="form-control" placeholder="รหัสผ่าน">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary">แก้ไขข้อมูล</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+    <script>
+        $("#form-editCustomer").submit(function() {
+            var inputs = $("#form-editCustomer :input");
+            var values = {};
+            inputs.each(function() {
+                values[this.name] = $(this).val();
+            });
+            console.log(values);
+
+            if (confirm("กดยืนยันเพื่อแก้ไขข้อมูลลูกค้า")) {
+                $.ajax({
+                    url: "./controller/mgecustomer_cl.php",
+                    type: "POST",
+                    data: {
+                        key: "editCustomer",
+                        data: values
+                    },
+                    success: function(result, statusText, jqXHR) {
+                        console.log(result);
+                        if (result == "lcodeX01") {
+                            alert('มีรหัสประชาชนลูกค้าในระบบแล้ว');
+                        } else if (result == 'success') {
+                            alert('แก้ไข้ข้อมูลลูกค้าสำเร็จ');
+                            location.reload();
+                        } else if (result == 'lcodeX02') {
+                            alert('ไม่สามารถใช้ ชื่อผู้ใช้ นี้ได้');
+                        } else {
+                            alert('ไม่สามารถแก้ไข้ข้อมูลได้ กรุณาลองใหม่อีกครั้ง');
+                            location.reload();
+                        }
+                    },
+                    error(jqXHR, statusText) {
+                        alert('ไม่สามารถแก้ไข้ข้อมูลได้ กรุณาลองใหม่อีกครั้ง');
+                        location.reload();
+                    }
+                });
+            }
+
+        });
+
+
+
+        function editCustomer_modal(id_cm, id_code, name_cm, lastname_cm, tel_cm, uname_cm, pass_cm) {
+            $("#form-editCustomer :input:hidden[name=id_cm]").val(id_cm);
+            $("#form-editCustomer :input:text[name=id_code]").val('' + id_code);
+            $("#form-editCustomer :input:text[name=name_cm]").val('' + name_cm);
+            $("#form-editCustomer :input:text[name=lastname_cm]").val('' + lastname_cm);
+            $("#form-editCustomer :input:text[name=uname_cm]").val('' + uname_cm);
+            $("#form-editCustomer :input:text[name=pass_cm]").val('' + pass_cm);
+            $("#form-editCustomer :input[type=tel][name=tel_cm]").val(tel_cm);
+
+
+            $('#editCustomer_modal').modal('show');
+        }
+    </script>
 </body>
 
 </html>

@@ -4,7 +4,8 @@ include_once('../config/connectdb.php');
 session_start();
 
 $data = null;
-$DATA = null;
+$DATA_ = null;
+
 $ID = null;
 $name_cm = null;
 $id_code = null;
@@ -12,6 +13,8 @@ $lastname_cm = null;
 $uname_cm = null;
 $tel_cm = null;
 $pass_cm = null;
+
+
 if (isset($_SESSION['key']) && $_SESSION['key'] == 'cm') {
     $DATA_ = $_SESSION['data'];
     $ID = $DATA_->id_cm;

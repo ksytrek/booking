@@ -1,3 +1,8 @@
+<?php
+include_once('./header.php');
+
+$row = $data;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -145,9 +150,9 @@
                                 </div><!-- header end -->
 
                                 <div class="entry-content">
-                                    <strong class="info_name">ชื่อ : </strong> นายสมพล วิลา
+                                    <strong class="info_name">ชื่อ : </strong> <?php echo $name_AD . ' ' . $lastname_AD  ?>
                                     <br>
-                                    <strong class="info_name">เบอร์ : </strong> 0971271931
+                                    <strong class="info_name">เบอร์ : </strong> <?php echo $tel_AD; ?>
                                 </div>
 
                                 <div class="post-footer">
@@ -233,7 +238,8 @@
     <div class="modal fade" id="editInfo_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form id="" action="javascript:void(0)" method="POST">
+                <form id="form-edit_ad" action="javascript:void(0)" method="POST">
+                    <input type="hidden" name="id_ad" value="<?php echo $ID ?>" required>
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">แก้ไขข้อมูลส่วนตัว</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -243,27 +249,67 @@
                     <div class="modal-body">
                         <label for="" class="form-control-label">ข้อมูลทั่วไป</label>
                         <div class="form-group">
-                            <input type="text" name="" value="xxxx" class="form-control" placeholder="ชื่อ">
+                            <input type="text" name="name_ad" value="<?php echo $name_AD ?>" class="form-control" placeholder="ชื่อ" required>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="" value="xxxx" class="form-control" placeholder="นามสกุล">
+                            <input type="text" name="lastname_ad" value="<?php echo $lastname_AD ?>" class="form-control" placeholder="นามสกุล" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="tel_ad" value="<?php echo $tel_AD ?>" class="form-control" placeholder="เบอร์มือถือ" required>
                         </div>
                         <label for="" class="form-control-label">ข้อมูลล็อกอิน</label>
                         <div class="form-group">
-                            <input type="text" name="" value="xxxxxxx" class="form-control" placeholder="ชื่อผู้ใช้">
+                            <input type="text" name="uname_ad" value="<?php echo $uname_AD ?>" class="form-control" placeholder="ชื่อผู้ใช้" required>
                         </div>
                         <div class="form-group">
-                            <input type="password" name="" value="xxxxxx" class="form-control" placeholder="รหัสผ่าน">
+                            <input type="password" name="pass_ad" value="<?php echo $pass_AD ?>" class="form-control" placeholder="รหัสผ่าน" required>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                        <button type="button" class="btn btn-primary">แก้ไขข้อมูล</button>
+                        <button type="submit" class="btn btn-primary">แก้ไขข้อมูล</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        $("#form-edit_ad").submit(function() {
+            var inputs = $("#form-edit_ad :input");
+            var values = {};
+            inputs.each(function() {
+                values[this.name] = $(this).val();
+            });
+
+            // console.log(values);
+            if (confirm("กดยืนยันเพื่อแก้ไขข้อมูล")) {
+                $.ajax({
+                    url: "./controller/infom_cl.php",
+                    type: "POST",
+                    data: {
+                        key: "form-edit_ad",
+                        data: values
+                    },
+                    success: function(result, statusText) {
+                        console.log(result);
+                        if (result == 'success') {
+                            alert("แก้ไขข้อมูลสำเร็จ");
+                            location.reload();
+                        } else {
+                            alert("ไม่สามารถแก้ไขข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
+                            location.reload();
+                        }
+                    },
+                    error: function(result, statusText) {
+                        alert("ไม่สามารถแก้ไขข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
+                        location.reload();
+                    }
+                });
+            }
+
+        });
+    </script>
 </body>
 
 </html>

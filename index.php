@@ -504,7 +504,9 @@
                     } else if (result == 'success') {
                         alert('สมัครสมาชิกสำเร็จ');
                         location.reload();
-                    } else {
+                    } else if(result == 'lcodeX02') {
+                        alert('ไม่สามารถใช้ ชื่อผู้ใช้ นี้ได้');
+                    }else {
                         alert('ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่อีกครั้ง');
                         location.reload();
                     }

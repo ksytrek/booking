@@ -17,14 +17,21 @@ if (isset($_POST['key']) && $_POST['key'] == 'form_register') {
                                         (NULL, '$id_code', '$name_cm', '$lastname_cm', '$uname_cm', '$tel_cm', '$pass_cm', '0');";
     
     $sql_search_idCode = "SELECT * FROM `customer` WHERE id_code = '$id_code'";
+    $sql_search_user = "SELECT * FROM `customer` WHERE uname_cm = '$uname_cm'";
 
     $row_search = Database::query($sql_search_idCode, PDO::FETCH_OBJ)->fetch(PDO::FETCH_OBJ);
     if ($row_search == null) {
-        if (Database::query($sql_insert)) {
-            echo "success";
-        } else {
-            echo "error";
+        $row_search_user  = Database::query($sql_search_user, PDO::FETCH_OBJ)->fetch(PDO::FETCH_OBJ);
+        if($row_search_user == null) {
+            if (Database::query($sql_insert)) {
+                echo "success";
+            } else {
+                echo "error";
+            }
+        }else {
+            echo "lcodeX02";
         }
+        
     } else {
         echo "lcodeX01";
     }
