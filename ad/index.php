@@ -260,7 +260,7 @@ include_once('./header.php');
                                 <thead>
                                     <tr>
                                         <th class="text-center">ลำดับ</th>
-                                        <th class="text-center">ชือลูกค้า</th>
+                                        <th class="text-center">ชื่อลูกค้า</th>
                                         <th class="text-center">โต๊ะ</th>
                                         <th class="text-center">จำนวนคน</th>
                                         <th class="text-center">เบอร์</th>
