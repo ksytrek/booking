@@ -263,7 +263,7 @@ include_once('./header.php');
                                         <th class="text-center">ชื่อลูกค้า</th>
                                         <th class="text-center">โต๊ะ</th>
                                         <th class="text-center">จำนวนคน</th>
-                                        <th class="text-center">เบอร์</th>
+                                        <th class="text-center">เบอร์โทรศัพท์</th>
                                         <th>เวลาจองเข้าร้าน</th>
                                         <th>เวลาที่ร้านกำหนด</th>
                                         <th>สถานะ</th>

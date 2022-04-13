@@ -151,11 +151,11 @@ include_once('./header.php');
                                 <thead>
                                     <tr class="text-center">
                                         <th>ลำดับ</th>
-                                        <th>รหัสบัตร ปปช.</th>
+                                        <th>รหัสบัตรประชาชน</th>
                                         <th>ชื่อ - สกุล</th>
-                                        <th>เบอร์โทร</th>
+                                        <th>เบอร์โทรศัพท์</th>
                                         <th>ชื่อผู้ใช้</th>
-                                        <th>รหัสผ่าน</th>
+                                        <!-- <th>รหัสผ่าน</th> -->
                                         <th><a href="javascript:$('#addCustomer_modal').modal('show');">เพิ่มลูกค้าใหม่</a></th>
                                     </tr>
                                 </thead>
@@ -170,7 +170,7 @@ include_once('./header.php');
                                             <td><?php echo $row->name_cm . ' ' . $row->lastname_cm; ?></td>
                                             <td><?php echo $row->tel_cm ?></td>
                                             <td><?php echo $row->uname_cm ?></td>
-                                            <td><?php echo $row->pass_cm ?></td>
+                                            
                                             <td>
                                                 <a href="javascript:editCustomer_modal('<?php echo $row->id_cm; ?>','<?php echo $row->id_code; ?>','<?php echo $row->name_cm; ?>', '<?php echo $row->lastname_cm; ?>', '<?php echo $row->tel_cm ?>', '<?php echo $row->uname_cm ?>', '<?php echo $row->pass_cm ?>')" class="badge badge-success">แก้ไข</a>&nbsp;&nbsp;
                                                 <a href="javascript:deleteCustomer('<?php echo $row->id_cm ?>')" class="badge badge-danger">ลบ</a>
