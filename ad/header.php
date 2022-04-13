@@ -21,7 +21,7 @@ if (isset($_SESSION['key']) && $_SESSION['key'] == 'ad') {
     $ID = $DATA_->id_ad ;
 
     // print_r($DATA_);
-    $data = Database::query("SELECT * FROM `admin` WHERE id_ad = '1';", PDO::FETCH_OBJ)->fetch(PDO::FETCH_OBJ);
+    $data = Database::query("SELECT * FROM `admin` WHERE id_ad = '$ID';", PDO::FETCH_OBJ)->fetch(PDO::FETCH_OBJ);
     // $data = Database::query("SELECT * FROM `customer` WHERE id_cm = '$ID'", PDO::FETCH_OBJ)->fetch(PDO::FETCH_OBJ);
     // print_r($data);
     $name_AD = $data->name_ad;

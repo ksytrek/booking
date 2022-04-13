@@ -227,7 +227,7 @@ include_once('./header.php');
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) :
                                                 // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
-                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month-1] . ' ' . (543 + intval($row->year));;
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month - 1] . ' ' . (543 + intval($row->year));;
                                                 $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
                                                 $timeEnd_re = $date . "</br> " . $row->timeEnd_n . ' น.';
                                             ?>
@@ -262,6 +262,7 @@ include_once('./header.php');
                                         function update_mgBook_table() {
                                             $('#mgBook_table').DataTable({
                                                 dom: 'lBfrtip',
+                                                // select: true,
                                                 lengthMenu: [
                                                     [10, 25, 50, 60, -1],
                                                     [10, 25, 50, 60, "All"]
@@ -287,7 +288,19 @@ include_once('./header.php');
                                                 //serverSide: true, // ใช้งานในโหมด Server-side processing
                                                 // กำหนดให้ไม่ต้องการส่งการเรียงข้อมูลค่าเริ่มต้น จะใช้ค่าเริ่มต้นตามค่าที่กำหนดในไฟล์ php
                                                 retrieve: true,
-                                                buttons: []
+                                                buttons: [ {
+                                                    extend: 'print',
+                                                    text: 'พิมพ์',
+                                                    messageTop: '',
+
+                                                    filename: function() {
+                                                       return "ประวัติการจอง "; //+hour+'-'+minutes + '-'+days +'-'+month +'-'+years
+                                                    },
+                                                    // title: 'รายชื่อสิทเข้าห้อง',
+                                                    exportOptions: {
+                                                        pageSize: 'LEGAL'
+                                                    }
+                                                }]
                                             });
                                         }
                                     </script>
@@ -338,10 +351,10 @@ include_once('./header.php');
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) : //create_time
                                                 // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
-                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month-1] . ' ' . (543 + intval($row->year));
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month - 1] . ' ' . (543 + intval($row->year));
                                                 $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
 
-                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d-1] . ' ' . (543 + intval($row->year_c));
+                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d - 1] . ' ' . (543 + intval($row->year_c));
                                                 $timeC_re = $date_C . "</br> " . $row->time_c . ' น.';
                                             ?>
                                                 <tr>
@@ -391,55 +404,7 @@ include_once('./header.php');
                                                 //serverSide: true, // ใช้งานในโหมด Server-side processing
                                                 // กำหนดให้ไม่ต้องการส่งการเรียงข้อมูลค่าเริ่มต้น จะใช้ค่าเริ่มต้นตามค่าที่กำหนดในไฟล์ php
 
-                                                buttons: [{
-                                                    extend: 'excel',
-                                                    text: 'ส่งออก EXCEL',
-                                                    messageTop: '',
-                                                    filename: function() {
-                                                        // const d = new Date();
-                                                        // // let time = d.getTime();
-                                                        // let hour = d.getHours();
-                                                        // let minutes = d.getMinutes();
-                                                        // let day = d.getDay();
-                                                        // let month = d.getMonth();
-                                                        // let year = d.getFullYear();
-                                                        return "ประวัติการจอง "; //+hour+'-'+minutes + '-'+days +'-'+month +'-'+years
-                                                    },
-                                                    // title: 'รายชื่อสิทเข้าห้อง',
-                                                    exportOptions: {
-                                                        // columns: [0, 1, 2]
-                                                        // คอลัมส์ที่จะส่งออก
-                                                        // modifier: {
-                                                        //     page: 'all' // หน้าที่จะส่งออก all / current
-                                                        // },
-                                                        // stripHtml: true
-                                                    }
-                                                }, {
-                                                    extend: 'print',
-                                                    text: 'พิมพ์',
-                                                    messageTop: '',
-
-                                                    filename: function() {
-                                                        // const d = new Date();
-                                                        // // let time = d.getTime();
-                                                        // let hour = d.getHours();
-                                                        // let minutes = d.getMinutes();
-                                                        // let day = d.getDay();
-                                                        // let month = d.getMonth();
-                                                        // let year = d.getFullYear();
-                                                        return "ประวัติการจอง "; //+hour+'-'+minutes + '-'+days +'-'+month +'-'+years
-                                                    },
-                                                    // title: 'รายชื่อสิทเข้าห้อง',
-                                                    exportOptions: {
-                                                        pageSize: 'LEGAL'
-                                                        // columns: [0, 1, 2]
-                                                        // คอลัมส์ที่จะส่งออก
-                                                        // modifier: {
-                                                        //     page: 'all' // หน้าที่จะส่งออก all / current
-                                                        // },
-                                                        // stripHtml: true
-                                                    }
-                                                }],
+                                                buttons: [],
                                                 retrieve: true,
                                             });
                                         }
@@ -490,10 +455,10 @@ include_once('./header.php');
                                             $i_r = null;
                                             foreach (Database::query($sql_search, PDO::FETCH_OBJ) as $row) : //create_time
                                                 // $date = 'วันที่ '.$row->Dd.' เดือน'.$thaimonth[$row->month-1].' พ.ศ.'.$row->year+543;
-                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month-1] . ' ' . (543 + intval($row->year));
+                                                $date = '' . $row->Dd . ' ' . $thaimonth[$row->month - 1] . ' ' . (543 + intval($row->year));
                                                 $timeStart_re = $date . "</br> " . $row->timeStart_n . ' น.';
 
-                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d-1] . ' ' . (543 + intval($row->year_c));
+                                                $date_C = '' . $row->year_Dd . ' ' . $thaimonth[$row->year_d - 1] . ' ' . (543 + intval($row->year_c));
                                                 $timeC_re = $date_C . "</br> " . $row->time_c . ' น.';
                                             ?>
                                                 <tr>
@@ -543,55 +508,7 @@ include_once('./header.php');
                                                 //serverSide: true, // ใช้งานในโหมด Server-side processing
                                                 // กำหนดให้ไม่ต้องการส่งการเรียงข้อมูลค่าเริ่มต้น จะใช้ค่าเริ่มต้นตามค่าที่กำหนดในไฟล์ php
 
-                                                buttons: [{
-                                                    extend: 'excel',
-                                                    text: 'ส่งออก EXCEL',
-                                                    messageTop: '',
-                                                    filename: function() {
-                                                        // const d = new Date();
-                                                        // // let time = d.getTime();
-                                                        // let hour = d.getHours();
-                                                        // let minutes = d.getMinutes();
-                                                        // let day = d.getDay();
-                                                        // let month = d.getMonth();
-                                                        // let year = d.getFullYear();
-                                                        return "ประวัติการจอง "; //+hour+'-'+minutes + '-'+days +'-'+month +'-'+years
-                                                    },
-                                                    // title: 'รายชื่อสิทเข้าห้อง',
-                                                    exportOptions: {
-                                                        // columns: [0, 1, 2]
-                                                        // คอลัมส์ที่จะส่งออก
-                                                        // modifier: {
-                                                        //     page: 'all' // หน้าที่จะส่งออก all / current
-                                                        // },
-                                                        // stripHtml: true
-                                                    }
-                                                }, {
-                                                    extend: 'print',
-                                                    text: 'พิมพ์',
-                                                    messageTop: '',
-
-                                                    filename: function() {
-                                                        // const d = new Date();
-                                                        // // let time = d.getTime();
-                                                        // let hour = d.getHours();
-                                                        // let minutes = d.getMinutes();
-                                                        // let day = d.getDay();
-                                                        // let month = d.getMonth();
-                                                        // let year = d.getFullYear();
-                                                        return "ประวัติการจอง "; //+hour+'-'+minutes + '-'+days +'-'+month +'-'+years
-                                                    },
-                                                    // title: 'รายชื่อสิทเข้าห้อง',
-                                                    exportOptions: {
-                                                        pageSize: 'LEGAL'
-                                                        // columns: [0, 1, 2]
-                                                        // คอลัมส์ที่จะส่งออก
-                                                        // modifier: {
-                                                        //     page: 'all' // หน้าที่จะส่งออก all / current
-                                                        // },
-                                                        // stripHtml: true
-                                                    }
-                                                }],
+                                                buttons: [],
                                                 retrieve: true,
                                             });
                                         }
