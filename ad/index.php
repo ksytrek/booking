@@ -296,7 +296,7 @@ include_once('./header.php');
                                             <td class="text-center"><?php echo ++$i_r; ?></td>
                                             <td class="text-center"><?php echo $row->name_cm . " " . $row->lastname_cm ?></td>
                                             <td class="text-center"><?php echo $row->zone_tb . "" . $row->no_tb ?></td>
-                                            <td><?php echo $row->people_sum; ?></td>
+                                            <td class="text-center"><?php echo $row->people_sum; ?></td>
                                             <td><?php echo $row->tel_cm; ?></td>
 
                                             <td><?php echo $timeStart_re; ?></td>
