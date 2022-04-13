@@ -205,6 +205,7 @@ include_once('./header.php');
                                             <tr>
                                                 <th class="text-center">ลำดับ</th>
                                                 <th class="text-center">โต๊ะ</th>
+                                                <th class="text-center">จำนวนคน</th>
                                                 <th class="text-center">เวลาจองเข้าร้าน</th>
                                                 <th class="text-center">เวลาที่ร้านกำหนด (ประมาณ)</th>
                                                 <th>สถานะ</th>
@@ -234,6 +235,7 @@ include_once('./header.php');
                                                 <tr>
                                                     <td class="text-center"><?php echo ++$i_r; ?></td>
                                                     <td class=""><?php echo 'โต๊ะ' . $row->zone_tb . '' . $row->no_tb ?></td>
+                                                    <td class=""><?php echo  $row->people_sum?></td>
                                                     <td><?php echo $timeStart_re; ?> </td>
                                                     <td><?php echo $timeEnd_re; ?> </td>
                                                     <td>
@@ -325,6 +327,7 @@ include_once('./header.php');
                                             <tr>
                                                 <th class="text-center">ลำดับ</th>
                                                 <th class="text-center">โต๊ะ</th>
+                                                <th class="text-center">จำนวนคน</th>
 
                                                 <th>เวลาจองเข้าร้าน</th>
                                                 <th>วันที่จองในระบบ</th>
@@ -360,6 +363,7 @@ include_once('./header.php');
                                                 <tr>
                                                     <td class="text-center"><?php echo ++$i_r; ?></td>
                                                     <td class="text-center"><?php echo 'โต๊ะ' . $row->zone_tb . '' . $row->no_tb ?></td>
+                                                    <td class=""><?php echo  $row->people_sum?></td>
                                                     <td><?php echo $timeStart_re; ?> </td>
                                                     <td><?php echo $timeC_re; ?> </td>
                                                     <td class="text-center"><span class="badge badge-success">สำเร็จ</span></td>
@@ -429,6 +433,7 @@ include_once('./header.php');
                                             <tr>
                                                 <th class="text-center">ลำดับ</th>
                                                 <th class="text-center">โต๊ะ</th>
+                                                <th class="text-center">จำนวนคน</th>
 
                                                 <th>เวลาจองเข้าร้าน</th>
                                                 <th>วันที่จองในระบบ</th>
@@ -464,6 +469,8 @@ include_once('./header.php');
                                                 <tr>
                                                     <td class="text-center"><?php echo ++$i_r; ?></td>
                                                     <td class="text-center"><?php echo 'โต๊ะ' . $row->zone_tb . '' . $row->no_tb ?></td>
+                                                    <td class=""><?php echo  $row->people_sum?></td>
+
                                                     <td><?php echo $timeStart_re; ?> </td>
                                                     <td><?php echo $timeC_re; ?> </td>
                                                     <td class="text-center"><span class="badge badge-danger">ยกเลิกแล้ว</span></td>

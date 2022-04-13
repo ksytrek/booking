@@ -262,6 +262,8 @@ include_once('./header.php');
                                         <th class="text-center">ลำดับ</th>
                                         <th class="text-center">ชือลูกค้า</th>
                                         <th class="text-center">โต๊ะ</th>
+                                        <th class="text-center">จำนวนคน</th>
+                                        <th class="text-center">เบอร์</th>
                                         <th>เวลาจองเข้าร้าน</th>
                                         <th>เวลาที่ร้านกำหนด</th>
                                         <th>สถานะ</th>
@@ -294,6 +296,9 @@ include_once('./header.php');
                                             <td class="text-center"><?php echo ++$i_r; ?></td>
                                             <td class="text-center"><?php echo $row->name_cm . " " . $row->lastname_cm ?></td>
                                             <td class="text-center"><?php echo $row->zone_tb . "" . $row->no_tb ?></td>
+                                            <td><?php echo $row->people_sum; ?></td>
+                                            <td><?php echo $row->tel_cm; ?></td>
+
                                             <td><?php echo $timeStart_re; ?></td>
                                             <td><?php echo $timeEnd_re; ?></td>
                                             <td>
